@@ -8,22 +8,22 @@ import os.path
 import time
 import twitkey
 
-# 別ファイルtwitkey.pyから必要な各パラメータ値を参照します。
+# 別ファイルtwitkey.pyから必要な各パラメータ値を参照します
 twitter = OAuth1Session(twitkey.twkey["CONSUMER_KEY"],
                         twitkey.twkey["CONSUMER_SECRET"],
                         twitkey.twkey["ACCESS_TOKEN"],
                         twitkey.twkey["ACCESS_TOKEN_SECRET"]
 )
 
-User_Id = ""
-Get_At_Once = 10
+user_id = ""
+get_at_once = 10
 target_text = "そう思うだろハム太郎"
 reply_word = "そうなのだ！！まったくもってその通りなのだ！！！"
 
-params = {"count": Get_At_Once}
+params = {"count": get_at_once}
 req = twitter.get("https://api.twitter.com/"
                   "1.1/statuses/user_timeline.json"
-                  "?screen_name=%s&include_rts=false" % User_Id,
+                  "?screen_name=%s&include_rts=false" % user_id,
                   params=params)
 timeline = json.loads(req.text)
 
@@ -45,11 +45,10 @@ def write_in_history(tweet_id):
 def send_reply_to(tweet_id):
     post_url = "https://api.twitter.com/1.1/statuses/update.json"
     post_params = {
-        "status": '@' + User_Id + reply_word,
+        "status": '@' + user_id + reply_word,
         "in_reply_to_status_id": str(tweet_id)
     }
     twitter.post(post_url, params = post_params)
-    print "done"
 
 for tweet in timeline:
     if tweet["in_reply_to_status_id"] == None: # 他人へのリプライは弾く
